@@ -14,12 +14,15 @@ let ternary_to_string t =
   | T_False -> "false"
   | T_Unknown -> "?"
 
+
 val t_or : ternary -> ternary -> Tot ternary
 let t_or t1 t2 =
   match t1 with
   | T_True -> T_True
   | T_False -> t2
-  | T_Unknown -> t2
+  | T_Unknown -> match t2 with
+                | T_False -> T_Unknown
+                | _ -> t2
 
 val test_orb1 : unit -> Lemma
       (ensures ((t_or T_False T_Unknown) = T_Unknown))
